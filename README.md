@@ -12,5 +12,7 @@ The screen shows the steps you took.
 
 A sample:
 
-![feature](3nplus1.png)
+![feature](screenshots/initial.png)
+
+![feature](screenshots/failed.png)
 
