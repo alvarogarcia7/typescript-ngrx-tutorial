@@ -2,7 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { IntCounter, Actions } from '../int-counter.reducer';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { map } from 'rxjs/internal/operators';
+import { map, takeLast, flatMap } from 'rxjs/internal/operators';
+
+
+export class Step {
+  input: number
+  operation: string
+  output: number
+  right: boolean
+
+  constructor(it: { input: number; operation: string; output: number; right: boolean; }) {
+    this.input = it.input
+    this.operation = it.operation
+    this.output = it.output
+    this.right = it.right
+  }
+
+  isCorrect(): boolean {
+    return this.right;
+  }
+}
 
 @Component({
   selector: 'app-3nplus1',
@@ -11,12 +30,18 @@ import { map } from 'rxjs/internal/operators';
 })
 export class _3nplus1Component implements OnInit {
 
-  value$: Observable<IntCounter>;
+  value$: Observable<Step>;
+  steps$: Observable<Step[]>;
 
-  constructor(private store: Store<IntCounter>) {
-    this.value$ = this.store.pipe(
-      select('_3nplus1'),
-      map(it => it.value))
+  constructor(private store: Store<Step[]>) {
+
+
+    this.steps$ = this.store.pipe(
+      select('_3nplus1'))
+
+    this.value$ = this.steps$.pipe(
+      map(it => it[it.length - 1]))
+
   }
 
   ngOnInit() {
@@ -32,6 +57,11 @@ export class _3nplus1Component implements OnInit {
 
   reset() {
     this.store.dispatch(Actions.reset())
+  }
+
+  last() {
+    return new Step({ right: true, input: 1, operation: "fake", output: 1 })
+    // return this.steps$.pipe(takeLast(1));
   }
 
 }

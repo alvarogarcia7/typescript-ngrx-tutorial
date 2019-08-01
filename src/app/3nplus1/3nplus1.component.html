@@ -1,7 +1,16 @@
-<button (click)="multiply()">Multiply</button>
+<button *ngIf="last().isCorrect()" (click)="multiply()">Multiply</button>
 
-Value: {{ value$ | async }}
+Value: {{ (value$ | async).output }}
 
-<button (click)="divide()">Divide</button>
+<button *ngIf="(value$|async).right" (click)="divide()">Divide</button>
 
 <button (click)="reset()">Reset</button>
+
+History:
+<div *ngFor="let step of (steps$ | async)">
+    <div *ngIf="!step.right" style="background-color: red">
+        ERROR! {{step.operation}}({{ step.input }}) = {{step.output}}.
+    </div>
+    <div *ngIf="step.right" style="background-color: green">
+        {{step.operation}}({{ step.input }}) = {{step.output}}. </div>
+</div>
