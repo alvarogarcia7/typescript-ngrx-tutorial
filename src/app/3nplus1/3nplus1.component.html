@@ -1,4 +1,4 @@
-<button *ngIf="last().isCorrect()" (click)="multiply()">Multiply</button>
+<button *ngIf="(value$|async).right" (click)="multiply()">Multiply</button>
 
 Value: {{ (value$ | async).output }}
 
